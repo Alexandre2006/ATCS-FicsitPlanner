@@ -4,7 +4,7 @@ using System;
 
 public class FicsitPlanner : ModuleRules
 {
-	public FicsitPlanner(ReadOnlyTargetRules Target) : base(Target)
+	public FicsitPlanner(ReadOnlyTargetRules target) : base(target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		CppStandard = CppStandardVersion.Cpp20;
