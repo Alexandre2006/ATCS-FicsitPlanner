@@ -1,36 +1,11 @@
 #include "FicsitPlanner.h"
-#include "AssetRegistryModule.h"
 
 #define LOCTEXT_NAMESPACE "FFicsitPlannerModule"
 
 void FFicsitPlannerModule::StartupModule()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hello World from FicsitPlanner!"));
-
-	// Get the Asset Registry Module
-	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<
-		FAssetRegistryModule>("AssetRegistry");
-
-	// Ensure the asset registry is fully loaded
-	AssetRegistryModule.Get().SearchAllAssets(true);
-
-	// Retrieve all assets
-	TArray<FAssetData> AssetDataArray;
-	AssetRegistryModule.Get().GetAllAssets(AssetDataArray, true);
-
-	// Check if any assets were found
-	if (AssetDataArray.Num() == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No assets found."));
-		return;
-	}
-
-	// Iterate through the assets and log their names and types
-	for (const FAssetData& AssetData : AssetDataArray)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Found Asset: %s, Type: %i"), *AssetData.GetObjectPathString(),
-		       AssetData.IsAssetLoaded());
-	}
+	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+	// This is the place to register any custom asset types, etc.
 }
 
 void FFicsitPlannerModule::ShutdownModule()
