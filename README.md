@@ -25,7 +25,7 @@ A Satisfactory mod that makes it easy to plan and calculate optimized factories!
 Use the keybind `K` to open the window while in game. This can be changed from the game settings.
 
 ## Demo
-<video src="https://raw.githubusercontent.com/Alexandre2006/FicsitPlanner/refs/heads/master/Demo/demo.mp4" controls></video>
+https://github.com/user-attachments/assets/dbd3e22f-227c-409c-b23e-114dbd6586b0
 
 ## Algorithm Info
 
