@@ -1,58 +1,85 @@
-// Mods/FicsitPlanner/Source/FicsitPlanner/Public/FicsitPlannerFactory.h
 #pragma once
 
 #include "CoreMinimal.h"
 #include "FGRecipe.h"
 #include "ItemAmount.h"
-#include "FicsitPlannerEngine.h"
 #include "FicsitPlannerFactory.generated.h"
 
-// Forward-declaration to avoid issues
-class UFicsitPlannerFactoryGroup;
+
+UENUM()
+enum EFactoryOptimizationType
+{
+	EFOT_None,
+	EFOT_Complexity,
+	EFOT_PowerConsumption,
+};
+
+class AFicsitPlannerEngine;
 
 /**
- * Factory class for Ficsit Planner.
- * Contains all the factory-generation algorithm, and visualization tools.
+ *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class FICSITPLANNER_API UFicsitPlannerFactory : public UObject
 {
 	GENERATED_BODY()
 
-public:
-	UFicsitPlannerFactory();
-	void Init(FItemAmount TargetProduct, UFGRecipe* Recipe, const TMap<UFGItemDescriptor*, TArray<UFGRecipe*>>& RecipeData);
+	// Configuration
+	const int RECIPE_COMPLEXITY = 10;
+	const int BUILDING_COMPLEXITY = 1;
 
-	UPROPERTY()
-	FItemAmount TargetProduct;
-
-	UPROPERTY()
-	TArray<FItemAmount> Byproducts;
-
-	UPROPERTY()
-	UFGRecipe* Recipe;
-
+private:
+	// Cached Factory Metrics
 	UPROPERTY()
 	float Multiplier;
 
 	UPROPERTY()
-	TArray<UFicsitPlannerFactoryGroup*> SubFactories;
-
-private:
-};
-
-/**
- * Allows factories to split depending on the recipe chosen (e.g. alternate recipes)
- */
-UCLASS()
-class FICSITPLANNER_API UFicsitPlannerFactoryGroup : public UObject
-{
-	GENERATED_BODY()
-
-public:
-	UFicsitPlannerFactoryGroup();
-	void Init(FItemAmount TargetProduct, const TMap<UFGItemDescriptor*, TArray<UFGRecipe*>>& RecipeData);
+	float PowerConsumption;
 
 	UPROPERTY()
-	TArray<UFicsitPlannerFactory*> Factories;
+	int Complexity;
+
+	// Cached Factory Data
+	UPROPERTY()
+	TSubclassOf<UFGRecipe> Recipe;
+
+	UPROPERTY()
+	FItemAmount PrimaryProduct;
+
+	UPROPERTY()
+	TArray<FItemAmount> Byproducts;
+
+	// Subfactories
+	UPROPERTY()
+	TArray<UFicsitPlannerFactory*> Subfactories;
+
+
+public:
+	// Constructor / Destructor
+	UFicsitPlannerFactory();
+	virtual ~UFicsitPlannerFactory() override;
+
+	// Init
+	void Init(FItemAmount Target, TSubclassOf<UFGRecipe> InRecipe, const TArray<TSubclassOf<UFGRecipe>>& VisitedRecipes,
+	          bool AllowLockedRecipes, EFactoryOptimizationType Optimization, AFicsitPlannerEngine* Engine);
+
+	// Getters (Factory Metrics - Individual)
+	virtual float GetMultiplier() const;
+	virtual float GetPowerConsumption() const;
+	virtual int GetComplexity() const;
+
+	// Getters (Factory Metrics - Sum)
+	virtual float GetTotalPowerConsumption();
+	virtual int GetTotalComplexity();
+
+	// Getters (Factory Data)
+	virtual TSubclassOf<UFGRecipe> GetRecipe() const;
+	virtual FItemAmount GetPrimaryProduct() const;
+	virtual TArray<FItemAmount> GetByproducts() const;
+
+	// Getters subfactories
+	virtual TArray<UFicsitPlannerFactory*>* GetSubfactories();
+
+	UPROPERTY()
+	bool UsesLockedRecipes;
 };
